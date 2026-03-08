@@ -3,10 +3,67 @@ import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { getWineById } from '../../data/wines';
 import { useCart } from '../../context/CartContext';
-import { Star, ArrowLeft, ShoppingCart, Check, Calendar, MapPin, Grape, Thermometer, Wine as WineIcon } from 'lucide-react';
+import {
+  Star,
+  ArrowLeft,
+  ShoppingCart,
+  Check,
+  Calendar,
+  MapPin,
+  Grape,
+  Thermometer,
+  Wine as WineIcon,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ImageWithFallback } from '../components/ImageWithFallback';
+
+import reservaTintoCabernetSauvignon1 from '../../assets/products/reserva-tinto-cabernet-sauvignon/1.png';
+import reservaTintoCabernetSauvignon2 from '../../assets/products/reserva-tinto-cabernet-sauvignon/2.png';
+
+import chardonnayPremium1 from '../../assets/products/chardonnay-premium/1.png';
+import chardonnayPremium2 from '../../assets/products/chardonnay-premium/2.png';
+
+import merlotReservaEspecial1 from '../../assets/products/merlot-reserva-especial/1.png';
+import merlotReservaEspecial2 from '../../assets/products/merlot-reserva-especial/2.png';
+
+import roseElegance1 from '../../assets/products/rose-elegance/1.png';
+import roseElegance2 from '../../assets/products/rose-elegance/2.png';
+
+import espumanteBrutNature1 from '../../assets/products/espumante-brut-nature/1.png';
+import espumanteBrutNature2 from '../../assets/products/espumante-brut-nature/2.png';
+
+import tannatGranReserva1 from '../../assets/products/tannat-gran-reserva/1.png';
+import tannatGranReserva2 from '../../assets/products/tannat-gran-reserva/2.png';
+
+const productImages: Record<string, string[]> = {
+  'reserva-tinto-cabernet-sauvignon': [
+    reservaTintoCabernetSauvignon1,
+    reservaTintoCabernetSauvignon2,
+  ],
+  'chardonnay-premium': [
+    chardonnayPremium1,
+    chardonnayPremium2,
+  ],
+  'merlot-reserva-especial': [
+    merlotReservaEspecial1,
+    merlotReservaEspecial2,
+  ],
+  'rose-elegance': [
+    roseElegance1,
+    roseElegance2,
+  ],
+  'espumante-brut-nature': [
+    espumanteBrutNature1,
+    espumanteBrutNature2,
+  ],
+  'tannat-gran-reserva': [
+    tannatGranReserva1,
+    tannatGranReserva2,
+  ],
+};
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -14,8 +71,9 @@ export function ProductDetailPage() {
   const { addToCart } = useCart();
   const [showSuccess, setShowSuccess] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [currentImage, setCurrentImage] = useState(0);
 
-  const getWineImage = (type: string) => {
+  const fallbackImageByType = (type: string) => {
     switch (type) {
       case 'tinto':
         return 'https://images.unsplash.com/photo-1743184579851-5ec9972100b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800';
@@ -53,6 +111,16 @@ export function ProductDetailPage() {
     );
   }
 
+  const images = productImages[wine.id] || [fallbackImageByType(wine.type)];
+
+  const handlePrevImage = () => {
+    setCurrentImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = () => {
+    setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
       addToCart(wine);
@@ -64,9 +132,8 @@ export function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Back Button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -81,9 +148,7 @@ export function ProductDetailPage() {
           </Link>
         </motion.div>
 
-        {/* Product Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-          {/* Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -91,32 +156,68 @@ export function ProductDetailPage() {
             className="relative"
           >
             <div className="sticky top-24">
-              <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-[#FAF8F3] to-[#F5F5F5] shadow-2xl">
+              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-[#FAF8F3] to-[#F5F5F5] shadow-2xl">
                 <ImageWithFallback
-                  src={getWineImage(wine.type)}
-                  alt={wine.name}
+                  src={images[currentImage]}
+                  alt={`${wine.name} - imagem ${currentImage + 1}`}
                   className="w-full h-full object-cover"
                 />
+
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={handlePrevImage}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white text-[#2C2C2C] rounded-full shadow-lg flex items-center justify-center transition"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+
+                    <button
+                      onClick={handleNextImage}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white text-[#2C2C2C] rounded-full shadow-lg flex items-center justify-center transition"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </>
+                )}
               </div>
-              
-              {/* Type Badge */}
+
               <div className="absolute top-6 left-6">
                 <span className="px-4 py-2 bg-white/95 backdrop-blur-sm text-[#8B1538] font-semibold uppercase tracking-wider rounded-full shadow-lg">
                   {wine.type}
                 </span>
               </div>
 
-              {/* Rating Badge */}
               <div className="absolute top-6 right-6 flex items-center space-x-2 px-4 py-2 bg-white/95 backdrop-blur-sm rounded-full shadow-lg">
                 <Star className="w-5 h-5 fill-[#D4AF37] text-[#D4AF37]" />
                 <span className="font-semibold text-[#2C2C2C]">
                   {wine.rating.toFixed(1)}
                 </span>
               </div>
+
+              {images.length > 1 && (
+                <div className="flex justify-center gap-3 mt-4">
+                  {images.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImage(index)}
+                      className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition ${currentImage === index
+                          ? 'border-[#8B1538]'
+                          : 'border-transparent'
+                        }`}
+                    >
+                      <ImageWithFallback
+                        src={image}
+                        alt={`${wine.name} miniatura ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </motion.div>
 
-          {/* Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -131,11 +232,10 @@ export function ProductDetailPage() {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-5 h-5 ${
-                      i < Math.floor(wine.rating)
+                    className={`w-5 h-5 ${i < Math.floor(wine.rating)
                         ? 'fill-[#D4AF37] text-[#D4AF37]'
                         : 'text-gray-300'
-                    }`}
+                      }`}
                   />
                 ))}
               </div>
@@ -148,7 +248,6 @@ export function ProductDetailPage() {
               {wine.description}
             </p>
 
-            {/* Quick Info */}
             <div className="grid grid-cols-2 gap-4 mb-8">
               <div className="flex items-start space-x-3 p-4 bg-[#FAF8F3] rounded-xl">
                 <Grape className="w-5 h-5 text-[#8B1538] mt-0.5" />
@@ -180,7 +279,6 @@ export function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Price and Add to Cart */}
             <div className="bg-white border-2 border-[#8B1538]/20 rounded-2xl p-6 mb-8">
               <div className="flex items-baseline space-x-2 mb-6">
                 <span className="font-['Playfair_Display'] text-5xl font-semibold text-[#8B1538]">
@@ -189,7 +287,6 @@ export function ProductDetailPage() {
                 <span className="text-gray-600">à vista</span>
               </div>
 
-              {/* Quantity Selector */}
               <div className="flex items-center space-x-4 mb-6">
                 <label className="font-semibold text-[#2C2C2C]">Quantidade:</label>
                 <div className="flex items-center space-x-3">
@@ -218,7 +315,6 @@ export function ProductDetailPage() {
               </button>
             </div>
 
-            {/* Success Message */}
             <AnimatePresence>
               {showSuccess && (
                 <motion.div
@@ -239,7 +335,6 @@ export function ProductDetailPage() {
           </motion.div>
         </div>
 
-        {/* Technical Sheet */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -282,7 +377,6 @@ export function ProductDetailPage() {
           </div>
         </motion.section>
 
-        {/* Reviews */}
         {wine.reviews.length > 0 && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -300,11 +394,10 @@ export function ProductDetailPage() {
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-4 h-4 ${
-                            i < review.rating
+                          className={`w-4 h-4 ${i < review.rating
                               ? 'fill-[#D4AF37] text-[#D4AF37]'
                               : 'text-gray-300'
-                          }`}
+                            }`}
                         />
                       ))}
                     </div>
