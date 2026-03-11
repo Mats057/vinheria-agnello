@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
-import { Shield, Truck, Award, ArrowRight, Sparkles, Wine as WineIcon } from 'lucide-react';
+import { Shield, Truck, Award, ArrowRight, Sparkles, Wine as WineIcon, Calendar } from 'lucide-react';
 import { motion } from 'motion/react';
 import { wines } from '../../data/wines';
 import { ProductCard } from '../components/ProductCard';
@@ -40,7 +40,7 @@ export function HomePage() {
                 transition={{ delay: 0.2 }}
                 className="text-[#D4AF37] uppercase tracking-widest text-sm mb-4 flex items-center space-x-2"
               >
-                <Sparkles className="w-4 h-4" />
+                <Calendar className="w-4 h-4" />
                 <span>Tradição desde 1985</span>
               </motion.p>
               
@@ -225,7 +225,7 @@ export function HomePage() {
         </section>
 
         {/* Wine Categories */}
-        <section className="py-20 bg-[#2C2C2C] text-white">
+        <section className="py-20 bg-[#FAF8F3]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -233,38 +233,71 @@ export function HomePage() {
               viewport={{ once: true }}
               className="text-center mb-12"
             >
-              <h2 className="font-['Playfair_Display'] text-4xl md:text-5xl mb-4">
+              <p className="text-[#8B1538] uppercase tracking-widest text-sm mb-3">
+                Nosso Catálogo
+              </p>
+              <h2 className="font-['Playfair_Display'] text-4xl md:text-5xl text-[#2C2C2C] mb-4">
                 Explore Nossas Categorias
               </h2>
-              <p className="text-gray-400 max-w-2xl mx-auto">
+              <p className="text-gray-600 max-w-2xl mx-auto">
                 De tintos robustos a espumantes delicados, temos o vinho perfeito para cada momento
               </p>
             </motion.div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { name: 'Tintos', type: 'tinto', color: 'from-red-900 to-red-700' },
-                { name: 'Brancos', type: 'branco', color: 'from-yellow-600 to-yellow-400' },
-                { name: 'Rosés', type: 'rosé', color: 'from-pink-600 to-pink-400' },
-                { name: 'Espumantes', type: 'espumante', color: 'from-amber-600 to-amber-400' },
+                {
+                  name: 'Tintos',
+                  type: 'tinto',
+                  description: 'Encorpados e complexos',
+                  image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+                },
+                {
+                  name: 'Brancos',
+                  type: 'branco',
+                  description: 'Frescos e elegantes',
+                  image: 'https://static.millesima.com/s3/attachements/editorial/h412px/drywhitewine.jpg',
+                },
+                {
+                  name: 'Rosés',
+                  type: 'rosé',
+                  description: 'Delicados e frutados',
+                  image: 'https://decantervinhos.vtexassets.com/arquivos/ids/159531-800-1040?v=638798215744070000&width=600&aspect=true',
+                },
+                {
+                  name: 'Espumantes',
+                  type: 'espumante',
+                  description: 'Borbulhantes e festivos',
+                  image: 'https://images.unsplash.com/photo-1547595628-c61a29f496f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+                },
               ].map((category, index) => (
                 <motion.div
                   key={category.type}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
                   <Link
                     to={`/produtos?type=${category.type}`}
-                    className="group block relative h-64 rounded-2xl overflow-hidden"
+                    className="group block relative h-72 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-80 group-hover:opacity-90 transition-opacity`} />
-                    <div className="relative h-full flex flex-col items-center justify-center p-6 text-center">
-                      <WineIcon className="w-16 h-16 mb-4 group-hover:scale-110 transition-transform" />
-                      <h3 className="font-['Playfair_Display'] text-2xl font-semibold">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#8B1538]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative h-full flex flex-col justify-end p-6">
+                      <h3 className="font-['Playfair_Display'] text-2xl font-semibold text-white mb-1">
                         {category.name}
                       </h3>
+                      <p className="text-sm text-gray-300 mb-3">{category.description}</p>
+                      <div className="flex items-center space-x-1 text-[#D4AF37] text-sm font-medium opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        <span>Explorar</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </div>
                     </div>
                   </Link>
                 </motion.div>
