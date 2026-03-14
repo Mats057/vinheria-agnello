@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Send, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import giulioBackground from '../../assets/home/Giulio.jpeg';
 import logoChatSvg from '../../assets/chatbot/logo_chat.svg';
 
 // ============================================================================
@@ -445,11 +444,11 @@ export function ChatBot({ onClose }: ChatBotProps) {
         timestamp: new Date(),
         wineRecommendation: wineId
           ? {
-              name: wineData[wineId].name,
-              image: wineData[wineId].image,
-              price: wineData[wineId].price,
-              productId: wineId,
-            }
+            name: wineData[wineId].name,
+            image: wineData[wineId].image,
+            price: wineData[wineId].price,
+            productId: wineId,
+          }
           : undefined,
       };
 
@@ -471,7 +470,7 @@ export function ChatBot({ onClose }: ChatBotProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-end justify-end p-4 md:p-6 bg-black/30 backdrop-blur-sm"
+      className="z-50 fixed inset-0 flex justify-end items-end bg-black/30 backdrop-blur-sm p-4 md:p-6"
       onClick={onClose}
     >
       <motion.div
@@ -480,66 +479,55 @@ export function ChatBot({ onClose }: ChatBotProps) {
         exit={{ scale: 0.8, opacity: 0, y: 100 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+        className="flex flex-col bg-white shadow-2xl rounded-2xl w-full max-w-md h-[600px] overflow-hidden"
       >
         {/* ===== HEADER ===== */}
-        <div className="bg-gradient-to-r from-[#8B1538] to-[#6D0F2C] text-white p-6">
-          <div className="flex items-center justify-between mb-2">
+        <div className="bg-gradient-to-r from-[#8B1538] to-[#6D0F2C] p-6 text-white">
+          <div className="flex justify-between items-center mb-2">
             <div className="flex items-center space-x-3">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center">
+              <div className="flex justify-center items-center rounded-full w-16 h-16">
                 <img src={logoChatSvg} alt="Chat" className="w-12 h-12" />
               </div>
               <div>
                 <h3 className="font-['Playfair_Display'] font-semibold text-lg">
                   Sr. Giulio
                 </h3>
-                <p className="text-sm text-white/80">Sommelier Digital</p>
+                <p className="text-white/80 text-sm">Sommelier Digital</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-full transition-colors"
+              className="hover:bg-white/20 p-2 rounded-full transition-colors"
               aria-label="Fechar chat"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-sm text-white/90">
+          <p className="text-white/90 text-sm">
             Sempre online para ajudá-lo
           </p>
         </div>
 
         {/* ===== MENSAGENS ===== */}
-        <div
-          className="flex-1 overflow-y-auto p-6 space-y-4 bg-[#FAF8F3]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(250, 248, 243, 0.58), rgba(250, 248, 243, 0.58)), url(${giulioBackground})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
-        >
+        <div className="flex-1 space-y-4 bg-[#FAF8F3] p-6 overflow-y-auto">
           <AnimatePresence>
             {messages.map((message) => (
               <motion.div
                 key={message.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`flex ${
-                  message.sender === 'user' ? 'justify-end' : 'justify-start'
-                }`}
+                className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'
+                  }`}
               >
                 <div
-                  className={`flex items-start space-x-2 max-w-[80%] ${
-                    message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
-                  }`}
+                  className={`flex items-start space-x-2 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                    }`}
                 >
                   <div
-                    className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                      message.sender === 'user'
+                    className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${message.sender === 'user'
                         ? 'bg-[#8B1538]'
                         : ''
-                    }`}
+                      }`}
                   >
                     {message.sender === 'user' ? (
                       <User className="w-5 h-5 text-white" />
@@ -549,11 +537,10 @@ export function ChatBot({ onClose }: ChatBotProps) {
                   </div>
                   <div>
                     <div
-                      className={`rounded-2xl px-4 py-3 ${
-                        message.sender === 'user'
+                      className={`rounded-2xl px-4 py-3 ${message.sender === 'user'
                           ? 'bg-[#8B1538] text-white'
                           : 'bg-white text-[#2C2C2C] shadow-sm'
-                      }`}
+                        }`}
                     >
                       <p
                         className="text-sm leading-relaxed"
@@ -571,11 +558,11 @@ export function ChatBot({ onClose }: ChatBotProps) {
                         onClick={() =>
                           (window.location.href = `/produto/${message.wineRecommendation!.productId}`)
                         }
-                        className="mt-3 w-full max-w-xs bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden cursor-pointer border border-gray-200"
+                        className="bg-white shadow-md hover:shadow-lg mt-3 border border-gray-200 rounded-xl w-full max-w-xs overflow-hidden transition-shadow cursor-pointer"
                         aria-label={`Ver detalhes de ${message.wineRecommendation.name}`}
                       >
                         <div className="flex gap-3 p-3">
-                          <div className="w-20 h-24 bg-gradient-to-b from-[#8B1538] to-[#6D0F2C] rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                          <div className="flex flex-shrink-0 justify-center items-center bg-gradient-to-b from-[#8B1538] to-[#6D0F2C] rounded-lg w-20 h-24 overflow-hidden">
                             <img
                               src={message.wineRecommendation.image}
                               alt={message.wineRecommendation.name}
@@ -586,15 +573,15 @@ export function ChatBot({ onClose }: ChatBotProps) {
                             <h4 className="font-semibold text-[#2C2C2C] text-sm">
                               {message.wineRecommendation.name}
                             </h4>
-                            <p className="text-2xl font-bold text-[#8B1538] mt-1">
+                            <p className="mt-1 font-bold text-[#8B1538] text-2xl">
                               R$ {message.wineRecommendation.price}
                             </p>
-                            <p className="text-xs text-gray-500 mt-1">Clique para mais detalhes</p>
+                            <p className="mt-1 text-gray-500 text-xs">Clique para mais detalhes</p>
                           </div>
                         </div>
                       </motion.button>
                     )}
-                    <p className="text-xs text-gray-500 mt-1 px-2">
+                    <p className="mt-1 px-2 text-gray-500 text-xs">
                       {message.timestamp.toLocaleTimeString('pt-BR', {
                         hour: '2-digit',
                         minute: '2-digit',
@@ -609,7 +596,7 @@ export function ChatBot({ onClose }: ChatBotProps) {
         </div>
 
         {/* ===== INPUT ===== */}
-        <div className="p-4 border-t border-gray-200 bg-white">
+        <div className="bg-white p-4 border-gray-200 border-t">
           <div className="flex items-end space-x-2">
             <input
               type="text"
@@ -617,13 +604,13 @@ export function ChatBot({ onClose }: ChatBotProps) {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Digite sua mensagem..."
-              className="flex-1 px-4 py-3 bg-[#FAF8F3] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B1538] focus:border-transparent resize-none"
+              className="flex-1 bg-[#FAF8F3] px-4 py-3 border border-gray-200 focus:border-transparent rounded-xl focus:outline-none focus:ring-[#8B1538] focus:ring-2 resize-none"
               aria-label="Digite sua mensagem"
             />
             <button
               onClick={handleSend}
               disabled={!inputValue.trim()}
-              className="p-3 bg-gradient-to-br from-[#8B1538] to-[#6D0F2C] text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gradient-to-br from-[#8B1538] to-[#6D0F2C] disabled:opacity-50 hover:shadow-lg p-3 rounded-xl text-white transition-all disabled:cursor-not-allowed"
               aria-label="Enviar mensagem"
             >
               <Send className="w-5 h-5" />

@@ -6,54 +6,52 @@ import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Tag } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react';
 import { ImageWithFallback } from '../components/ImageWithFallback';
 
+const productImages = import.meta.glob('../../assets/products/*/1.png', {
+  eager: true,
+  import: 'default',
+}) as Record<string, string>;
+
+const fallbackImage =
+  'https://images.unsplash.com/photo-1743184579851-5ec9972100b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200';
+
 export function CartPage() {
   const { items, removeFromCart, updateQuantity, totalPrice } = useCart();
 
-  const getWineImage = (type: string) => {
-    switch (type) {
-      case 'tinto':
-        return 'https://images.unsplash.com/photo-1743184579851-5ec9972100b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200';
-      case 'branco':
-        return 'https://images.unsplash.com/photo-1586370434639-0fe43b2d32d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200';
-      case 'rosé':
-        return 'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200';
-      case 'espumante':
-        return 'https://images.unsplash.com/photo-1547595628-c61a29f496f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200';
-      default:
-        return 'https://images.unsplash.com/photo-1743184579851-5ec9972100b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200';
-    }
+  const getWineImage = (id: string) => {
+    const imagePath = `../../assets/products/${id}/1.png`;
+    return productImages[imagePath] ?? fallbackImage;
   };
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="flex flex-col bg-white min-h-screen">
         <Header />
-        <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <main className="flex flex-1 justify-center items-center px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-md"
+            className="max-w-md text-center"
           >
-            <div className="w-24 h-24 bg-[#FAF8F3] rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="flex justify-center items-center bg-[#FAF8F3] mx-auto mb-6 rounded-full w-24 h-24">
               <ShoppingBag className="w-12 h-12 text-[#8B1538]" />
             </div>
-            <h1 className="font-['Playfair_Display'] text-3xl md:text-4xl text-[#2C2C2C] mb-4">
+            <h1 className="mb-4 font-['Playfair_Display'] text-[#2C2C2C] text-3xl md:text-4xl">
               Seu Carrinho Está Vazio
             </h1>
-            <p className="text-gray-600 mb-8">
+            <p className="mb-8 text-gray-600">
               Adicione vinhos ao seu carrinho para continuar comprando.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex sm:flex-row flex-col justify-center gap-4">
               <Link
                 to="/produtos"
-                className="inline-flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-[#8B1538] to-[#6D0F2C] text-white rounded-xl font-semibold hover:shadow-xl transition-all group"
+                className="group inline-flex justify-center items-center space-x-2 bg-gradient-to-r from-[#8B1538] to-[#6D0F2C] hover:shadow-xl px-8 py-3 rounded-xl font-semibold text-white transition-all"
               >
                 <span>Ver Catálogo</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 to="/quiz"
-                className="inline-flex items-center justify-center space-x-2 px-8 py-3 bg-white border-2 border-gray-200 text-[#2C2C2C] rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                className="inline-flex justify-center items-center space-x-2 bg-white hover:bg-gray-50 px-8 py-3 border-2 border-gray-200 rounded-xl font-semibold text-[#2C2C2C] transition-colors"
               >
                 <span>Fazer Quiz</span>
               </Link>
@@ -70,17 +68,17 @@ export function CartPage() {
   const total = subtotal + shipping;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white min-h-screen">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
         {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="font-['Playfair_Display'] text-3xl md:text-4xl text-[#2C2C2C] mb-2">
+          <h1 className="mb-2 font-['Playfair_Display'] text-[#2C2C2C] text-3xl md:text-4xl">
             Carrinho de Compras
           </h1>
           <p className="text-gray-600">
@@ -88,9 +86,9 @@ export function CartPage() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="gap-8 grid grid-cols-1 lg:grid-cols-3">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="space-y-4 lg:col-span-2">
             <AnimatePresence>
               {items.map((item, index) => (
                 <motion.div
@@ -99,13 +97,13 @@ export function CartPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -100 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow"
+                  className="bg-white hover:shadow-md p-6 border border-gray-200 rounded-2xl transition-shadow"
                 >
                   <div className="flex gap-6">
                     {/* Image */}
-                    <div className="w-24 h-32 flex-shrink-0 rounded-xl overflow-hidden bg-gradient-to-br from-[#FAF8F3] to-[#F5F5F5]">
+                    <div className="flex-shrink-0 bg-gradient-to-br from-[#FAF8F3] to-[#F5F5F5] rounded-xl w-24 h-32 overflow-hidden">
                       <ImageWithFallback
-                        src={getWineImage(item.type)}
+                        src={getWineImage(item.id)}
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />
@@ -115,16 +113,16 @@ export function CartPage() {
                     <div className="flex-1">
                       <Link
                         to={`/produto/${item.id}`}
-                        className="font-['Playfair_Display'] text-xl font-semibold text-[#2C2C2C] hover:text-[#8B1538] transition-colors mb-2 block"
+                        className="block mb-2 font-['Playfair_Display'] font-semibold text-[#2C2C2C] hover:text-[#8B1538] text-xl transition-colors"
                       >
                         {item.name}
                       </Link>
-                      <p className="text-sm text-gray-600 mb-1">{item.region}</p>
-                      <p className="text-sm text-gray-500 capitalize mb-3">
+                      <p className="mb-1 text-gray-600 text-sm">{item.region}</p>
+                      <p className="mb-3 text-gray-500 text-sm capitalize">
                         {item.type} • {item.grape}
                       </p>
 
-                      <div className="flex items-center justify-between">
+                      <div className="flex justify-between items-center">
                         {/* Quantity Controls */}
                         <div className="flex items-center space-x-3">
                           <button
@@ -133,16 +131,16 @@ export function CartPage() {
                                 ? updateQuantity(item.id, item.quantity - 1)
                                 : removeFromCart(item.id)
                             }
-                            className="w-9 h-9 bg-[#FAF8F3] hover:bg-[#8B1538] hover:text-white rounded-lg transition-colors flex items-center justify-center"
+                            className="flex justify-center items-center bg-[#FAF8F3] hover:bg-[#8B1538] rounded-lg w-9 h-9 hover:text-white transition-colors"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
-                          <span className="w-12 text-center font-semibold text-[#2C2C2C]">
+                          <span className="w-12 font-semibold text-[#2C2C2C] text-center">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="w-9 h-9 bg-[#FAF8F3] hover:bg-[#8B1538] hover:text-white rounded-lg transition-colors flex items-center justify-center"
+                            className="flex justify-center items-center bg-[#FAF8F3] hover:bg-[#8B1538] rounded-lg w-9 h-9 hover:text-white transition-colors"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -150,12 +148,12 @@ export function CartPage() {
 
                         {/* Price and Remove */}
                         <div className="flex items-center space-x-4">
-                          <p className="font-['Playfair_Display'] text-2xl font-semibold text-[#8B1538]">
+                          <p className="font-['Playfair_Display'] font-semibold text-[#8B1538] text-2xl">
                             R$ {(item.price * item.quantity).toFixed(2)}
                           </p>
                           <button
                             onClick={() => removeFromCart(item.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            className="hover:bg-red-50 p-2 rounded-lg text-red-600 transition-colors"
                           >
                             <Trash2 className="w-5 h-5" />
                           </button>
@@ -174,21 +172,21 @@ export function CartPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="sticky top-24 bg-white border-2 border-[#8B1538]/20 rounded-2xl p-6"
+              className="top-24 sticky bg-white p-6 border-[#8B1538]/20 border-2 rounded-2xl"
             >
-              <h2 className="font-['Playfair_Display'] text-2xl text-[#2C2C2C] mb-6">
+              <h2 className="mb-6 font-['Playfair_Display'] text-[#2C2C2C] text-2xl">
                 Resumo do Pedido
               </h2>
 
               <div className="space-y-4 mb-6">
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-gray-600">Subtotal</span>
                   <span className="font-semibold text-[#2C2C2C]">
                     R$ {subtotal.toFixed(2)}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-gray-600">Frete</span>
                   <span className="font-semibold text-[#2C2C2C]">
                     {shipping === 0 ? (
@@ -200,20 +198,20 @@ export function CartPage() {
                 </div>
 
                 {shipping > 0 && (
-                  <div className="p-3 bg-[#FAF8F3] rounded-lg">
+                  <div className="bg-[#FAF8F3] p-3 rounded-lg">
                     <div className="flex items-start space-x-2">
-                      <Tag className="w-4 h-4 text-[#8B1538] mt-0.5 flex-shrink-0" />
-                      <p className="text-sm text-gray-700">
+                      <Tag className="flex-shrink-0 mt-0.5 w-4 h-4 text-[#8B1538]" />
+                      <p className="text-gray-700 text-sm">
                         Frete grátis para compras acima de R$ 200,00
                       </p>
                     </div>
                   </div>
                 )}
 
-                <div className="border-t border-gray-200 pt-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-lg text-[#2C2C2C]">Total</span>
-                    <span className="font-['Playfair_Display'] text-3xl font-semibold text-[#8B1538]">
+                <div className="pt-4 border-gray-200 border-t">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-[#2C2C2C] text-lg">Total</span>
+                    <span className="font-['Playfair_Display'] font-semibold text-[#8B1538] text-3xl">
                       R$ {total.toFixed(2)}
                     </span>
                   </div>
@@ -222,34 +220,34 @@ export function CartPage() {
 
               <Link
                 to="/checkout"
-                className="w-full py-4 bg-gradient-to-r from-[#8B1538] to-[#6D0F2C] text-white rounded-xl font-semibold text-center hover:shadow-xl transition-all flex items-center justify-center space-x-2 group"
+                className="group flex justify-center items-center space-x-2 bg-gradient-to-r from-[#8B1538] to-[#6D0F2C] hover:shadow-xl py-4 rounded-xl w-full font-semibold text-white text-center transition-all"
               >
                 <span>Finalizar Compra</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Link>
 
               <Link
                 to="/produtos"
-                className="block w-full py-3 mt-3 bg-white border-2 border-gray-200 text-[#2C2C2C] rounded-xl font-semibold text-center hover:bg-gray-50 transition-colors"
+                className="block bg-white hover:bg-gray-50 mt-3 py-3 border-2 border-gray-200 rounded-xl w-full font-semibold text-[#2C2C2C] text-center transition-colors"
               >
                 Continuar Comprando
               </Link>
 
               {/* Trust Badges */}
-              <div className="mt-6 pt-6 border-t border-gray-200 space-y-3">
-                <div className="flex items-center space-x-3 text-sm text-gray-600">
+              <div className="space-y-3 mt-6 pt-6 border-gray-200 border-t">
+                <div className="flex items-center space-x-3 text-gray-600 text-sm">
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Transporte climatizado</span>
                 </div>
-                <div className="flex items-center space-x-3 text-sm text-gray-600">
+                <div className="flex items-center space-x-3 text-gray-600 text-sm">
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                   <span>Embalagem segura</span>
                 </div>
-                <div className="flex items-center space-x-3 text-sm text-gray-600">
+                <div className="flex items-center space-x-3 text-gray-600 text-sm">
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>

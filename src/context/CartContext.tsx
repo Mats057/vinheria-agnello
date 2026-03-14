@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Wine } from '../data/wines';
+
+const CART_STORAGE_KEY = 'vinheria_agnello_cart';
 
 interface CartItem extends Wine {
   quantity: number;
@@ -18,7 +20,27 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
+    try {
+      const savedItems = window.localStorage.getItem(CART_STORAGE_KEY);
+      if (!savedItems) {
+        return [];
+      }
+
+      const parsedItems = JSON.parse(savedItems) as CartItem[];
+      return Array.isArray(parsedItems) ? parsedItems : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
 
   const addToCart = (wine: Wine) => {
     setItems(prevItems => {
