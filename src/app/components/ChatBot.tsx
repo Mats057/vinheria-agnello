@@ -486,8 +486,8 @@ export function ChatBot({ onClose }: ChatBotProps) {
         <div className="bg-gradient-to-r from-[#8B1538] to-[#6D0F2C] text-white p-6">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                <img src={logoChatSvg} alt="Chat" className="w-7 h-7" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center">
+                <img src={logoChatSvg} alt="Chat" className="w-12 h-12" />
               </div>
               <div>
                 <h3 className="font-['Playfair_Display'] font-semibold text-lg">
@@ -535,16 +535,16 @@ export function ChatBot({ onClose }: ChatBotProps) {
                   }`}
                 >
                   <div
-                    className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                    className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
                       message.sender === 'user'
                         ? 'bg-[#8B1538]'
                         : ''
                     }`}
                   >
                     {message.sender === 'user' ? (
-                      <User className="w-4 h-4 text-white" />
+                      <User className="w-5 h-5 text-white" />
                     ) : (
-                      <img src={logoChatSvg} alt="Bot" className="w-8 h-8" />
+                      <img src={logoChatSvg} alt="Bot" className="w-10 h-10" />
                     )}
                   </div>
                   <div>
